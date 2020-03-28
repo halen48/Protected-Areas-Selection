@@ -1,0 +1,560 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.10
+-- Dumped by pg_dump version 10.10
+CREATE EXTENSION postgis
+  SCHEMA public
+  VERSION "2.5.3";
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: br.domicilios.mma; Type: SCHEMA; Schema: -; Owner: administrador-banco
+--
+
+CREATE SCHEMA "br.domicilios.mma";
+
+
+ALTER SCHEMA "br.domicilios.mma" OWNER TO "administrador-banco";
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: censo2010municipios; Type: TABLE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE TABLE "br.domicilios.mma".censo2010municipios (
+    gid integer NOT NULL,
+    codigo numeric,
+    geom geometry(MultiPolygon,4326),
+    geocodigo character varying(17),
+    estado character varying(2),
+    municipio character varying(5),
+    distrito character varying(2),
+    subdistrit character varying(2),
+    area_apura character varying(2),
+    nome character varying(33)
+);
+
+
+ALTER TABLE "br.domicilios.mma".censo2010municipios OWNER TO "administrador-banco";
+
+--
+-- Name: censo2010municipios1; Type: TABLE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE TABLE "br.domicilios.mma".censo2010municipios1 (
+    gid integer NOT NULL,
+    geom geometry(MultiPolygon,4326),
+    geocodigo character varying(20),
+    nome character varying(60)
+);
+
+
+ALTER TABLE "br.domicilios.mma".censo2010municipios1 OWNER TO "administrador-banco";
+
+--
+-- Name: censo2010municipios1_gid_seq; Type: SEQUENCE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE SEQUENCE "br.domicilios.mma".censo2010municipios1_gid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "br.domicilios.mma".censo2010municipios1_gid_seq OWNER TO "administrador-banco";
+
+--
+-- Name: censo2010municipios1_gid_seq; Type: SEQUENCE OWNED BY; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER SEQUENCE "br.domicilios.mma".censo2010municipios1_gid_seq OWNED BY "br.domicilios.mma".censo2010municipios1.gid;
+
+
+--
+-- Name: censo2010municipios_gid_seq; Type: SEQUENCE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE SEQUENCE "br.domicilios.mma".censo2010municipios_gid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "br.domicilios.mma".censo2010municipios_gid_seq OWNER TO "administrador-banco";
+
+--
+-- Name: censo2010municipios_gid_seq; Type: SEQUENCE OWNED BY; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER SEQUENCE "br.domicilios.mma".censo2010municipios_gid_seq OWNED BY "br.domicilios.mma".censo2010municipios.gid;
+
+
+--
+-- Name: exportar; Type: TABLE; Schema: br.domicilios.mma; Owner: postgres
+--
+
+CREATE TABLE "br.domicilios.mma".exportar (
+    geocodigo character varying(17),
+    geom geometry(MultiPolygon,4326),
+    uf text,
+    municipio character varying(33),
+    habitantes double precision,
+    distancia_km text
+);
+
+
+ALTER TABLE "br.domicilios.mma".exportar OWNER TO postgres;
+
+--
+-- Name: TABLE exportar; Type: COMMENT; Schema: br.domicilios.mma; Owner: postgres
+--
+
+COMMENT ON TABLE "br.domicilios.mma".exportar IS 'Municípios próximos (até 100km de distância) a cidades de 100k de habitantes e áreas de conservação com até 12k de habitantes';
+
+
+--
+-- Name: exportar2; Type: TABLE; Schema: br.domicilios.mma; Owner: postgres
+--
+
+CREATE TABLE "br.domicilios.mma".exportar2 (
+    geocodigo character varying(17),
+    geom geometry(MultiPolygon,4326),
+    uf text,
+    municipio character varying(33),
+    habitantes double precision,
+    distancia_km text
+);
+
+
+ALTER TABLE "br.domicilios.mma".exportar2 OWNER TO postgres;
+
+--
+-- Name: TABLE exportar2; Type: COMMENT; Schema: br.domicilios.mma; Owner: postgres
+--
+
+COMMENT ON TABLE "br.domicilios.mma".exportar2 IS 'Municípios próximos (até 100km de distância) a cidades de 100k de habitantes e áreas de conservação com até 5k de habitantes';
+
+
+--
+-- Name: habitantes_municipios; Type: TABLE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE TABLE "br.domicilios.mma".habitantes_municipios (
+    geocodigo character varying,
+    geom geometry(MultiPolygon,4326),
+    municipio character varying,
+    habitantes integer
+);
+
+
+ALTER TABLE "br.domicilios.mma".habitantes_municipios OWNER TO "administrador-banco";
+
+--
+-- Name: habitantes_municipios_geografico; Type: TABLE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE TABLE "br.domicilios.mma".habitantes_municipios_geografico (
+    gid integer NOT NULL,
+    codigo numeric,
+    geom geometry(MultiPolygon,4326),
+    geocodigo character varying(17),
+    estado character varying(2),
+    municipio character varying(5),
+    distrito character varying(2),
+    subdistrit character varying(2),
+    area_apura character varying(2),
+    nome character varying(33),
+    habitantes double precision
+);
+
+
+ALTER TABLE "br.domicilios.mma".habitantes_municipios_geografico OWNER TO "administrador-banco";
+
+--
+-- Name: habitantes_municipios_geografico_gid_seq; Type: SEQUENCE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE SEQUENCE "br.domicilios.mma".habitantes_municipios_geografico_gid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "br.domicilios.mma".habitantes_municipios_geografico_gid_seq OWNER TO "administrador-banco";
+
+--
+-- Name: habitantes_municipios_geografico_gid_seq; Type: SEQUENCE OWNED BY; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER SEQUENCE "br.domicilios.mma".habitantes_municipios_geografico_gid_seq OWNED BY "br.domicilios.mma".habitantes_municipios_geografico.gid;
+
+
+--
+-- Name: municipios_grande_populacao; Type: TABLE; Schema: br.domicilios.mma; Owner: postgres
+--
+
+CREATE TABLE "br.domicilios.mma".municipios_grande_populacao (
+    codigo numeric NOT NULL,
+    geom geometry(MultiPolygon,4326),
+    geocodigo character varying(17),
+    estado character varying(2),
+    municipio character varying(5),
+    distrito character varying(2),
+    subdistrit character varying(2),
+    area_apura character varying(2),
+    nome character varying(33),
+    habitantes double precision
+);
+
+
+ALTER TABLE "br.domicilios.mma".municipios_grande_populacao OWNER TO postgres;
+
+--
+-- Name: municipios_pequenos_parsec; Type: TABLE; Schema: br.domicilios.mma; Owner: postgres
+--
+
+CREATE TABLE "br.domicilios.mma".municipios_pequenos_parsec (
+    codigo numeric NOT NULL,
+    geom geometry(MultiPolygon,4326),
+    geocodigo character varying(17),
+    estado character varying(2),
+    municipio character varying(5),
+    distrito character varying(2),
+    subdistrit character varying(2),
+    area_apura character varying(2),
+    nome character varying(33),
+    habitantes double precision
+);
+
+
+ALTER TABLE "br.domicilios.mma".municipios_pequenos_parsec OWNER TO postgres;
+
+--
+-- Name: municipios_perfil_parsec; Type: TABLE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE TABLE "br.domicilios.mma".municipios_perfil_parsec (
+    gid integer NOT NULL,
+    codigo numeric,
+    geom geometry(MultiPolygon,4326),
+    geocodigo character varying(17),
+    estado character varying(2),
+    municipio character varying(5),
+    distrito character varying(2),
+    subdistrit character varying(2),
+    area_apura character varying(2),
+    nome character varying(33),
+    habitantes double precision
+);
+
+
+ALTER TABLE "br.domicilios.mma".municipios_perfil_parsec OWNER TO "administrador-banco";
+
+--
+-- Name: municipios_perfil_parsec_distante_cidade_grande; Type: TABLE; Schema: br.domicilios.mma; Owner: postgres
+--
+
+CREATE TABLE "br.domicilios.mma".municipios_perfil_parsec_distante_cidade_grande (
+    codigo numeric,
+    geom geometry(MultiPolygon,4326),
+    geocodigo character varying(17),
+    estado character varying(2),
+    municipio character varying(5),
+    distrito character varying(2),
+    subdistrit character varying(2),
+    area_apura character varying(2),
+    nome character varying(33),
+    habitantes double precision
+);
+
+
+ALTER TABLE "br.domicilios.mma".municipios_perfil_parsec_distante_cidade_grande OWNER TO postgres;
+
+--
+-- Name: TABLE municipios_perfil_parsec_distante_cidade_grande; Type: COMMENT; Schema: br.domicilios.mma; Owner: postgres
+--
+
+COMMENT ON TABLE "br.domicilios.mma".municipios_perfil_parsec_distante_cidade_grande IS 'Precisa deletar depois. Feito apenas para cache das operações. Utilizar municipios_pequenos_parsec agora';
+
+
+--
+-- Name: municipios_perfil_parsec_gid_seq; Type: SEQUENCE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE SEQUENCE "br.domicilios.mma".municipios_perfil_parsec_gid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "br.domicilios.mma".municipios_perfil_parsec_gid_seq OWNER TO "administrador-banco";
+
+--
+-- Name: municipios_perfil_parsec_gid_seq; Type: SEQUENCE OWNED BY; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER SEQUENCE "br.domicilios.mma".municipios_perfil_parsec_gid_seq OWNED BY "br.domicilios.mma".municipios_perfil_parsec.gid;
+
+
+--
+-- Name: perfil_uc_2005_2015; Type: TABLE; Schema: br.domicilios.mma; Owner: postgres
+--
+
+CREATE TABLE "br.domicilios.mma".perfil_uc_2005_2015 (
+    geocodigo character varying(17),
+    geom geometry(MultiPolygon,4326),
+    uf text,
+    municipio character varying(33),
+    habitantes double precision,
+    distancia_km text
+);
+
+
+ALTER TABLE "br.domicilios.mma".perfil_uc_2005_2015 OWNER TO postgres;
+
+--
+-- Name: ucstodas; Type: TABLE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE TABLE "br.domicilios.mma".ucstodas (
+    gid integer NOT NULL,
+    geom geometry(MultiPolygon,4326),
+    id_uc0 character varying(254),
+    nome_uc1 character varying(254),
+    id_wcmc2 character varying(254),
+    categori3 character varying(254),
+    grupo4 character varying(254),
+    esfera5 character varying(254),
+    ano_cria6 character varying(254),
+    gid7 character varying(254),
+    qualidad8 character varying(254),
+    ato_lega9 character varying(254),
+    dt_ultim10 character varying(254),
+    codigo_u11 character varying(254),
+    nome_org12 character varying(254)
+);
+
+
+ALTER TABLE "br.domicilios.mma".ucstodas OWNER TO "administrador-banco";
+
+--
+-- Name: ucstodas_final; Type: TABLE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE TABLE "br.domicilios.mma".ucstodas_final (
+    geom geometry(MultiPolygon,4326),
+    gid integer NOT NULL,
+    id_uc0 character varying(254),
+    nome_uc1 character varying(254),
+    uf character varying(19),
+    id_wcmc2 character varying(254),
+    categori3 character varying(254),
+    grupo4 character varying(254),
+    esfera5 character varying(254),
+    ano_cria6 character varying(254),
+    gid7 character varying(254),
+    qualidad8 character varying(254),
+    ato_lega9 character varying(254),
+    dt_ultim10 character varying(254),
+    codigo_u11 character varying(254),
+    nome_org12 character varying(254)
+);
+
+
+ALTER TABLE "br.domicilios.mma".ucstodas_final OWNER TO "administrador-banco";
+
+--
+-- Name: ucstodas_final_gid_seq; Type: SEQUENCE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE SEQUENCE "br.domicilios.mma".ucstodas_final_gid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "br.domicilios.mma".ucstodas_final_gid_seq OWNER TO "administrador-banco";
+
+--
+-- Name: ucstodas_final_gid_seq; Type: SEQUENCE OWNED BY; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER SEQUENCE "br.domicilios.mma".ucstodas_final_gid_seq OWNED BY "br.domicilios.mma".ucstodas_final.gid;
+
+
+--
+-- Name: ucstodas_gid_seq; Type: SEQUENCE; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+CREATE SEQUENCE "br.domicilios.mma".ucstodas_gid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "br.domicilios.mma".ucstodas_gid_seq OWNER TO "administrador-banco";
+
+--
+-- Name: ucstodas_gid_seq; Type: SEQUENCE OWNED BY; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER SEQUENCE "br.domicilios.mma".ucstodas_gid_seq OWNED BY "br.domicilios.mma".ucstodas.gid;
+
+
+--
+-- Name: censo2010municipios gid; Type: DEFAULT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".censo2010municipios ALTER COLUMN gid SET DEFAULT nextval('"br.domicilios.mma".censo2010municipios_gid_seq'::regclass);
+
+
+--
+-- Name: censo2010municipios1 gid; Type: DEFAULT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".censo2010municipios1 ALTER COLUMN gid SET DEFAULT nextval('"br.domicilios.mma".censo2010municipios1_gid_seq'::regclass);
+
+
+--
+-- Name: habitantes_municipios_geografico gid; Type: DEFAULT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".habitantes_municipios_geografico ALTER COLUMN gid SET DEFAULT nextval('"br.domicilios.mma".habitantes_municipios_geografico_gid_seq'::regclass);
+
+
+--
+-- Name: municipios_perfil_parsec gid; Type: DEFAULT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".municipios_perfil_parsec ALTER COLUMN gid SET DEFAULT nextval('"br.domicilios.mma".municipios_perfil_parsec_gid_seq'::regclass);
+
+
+--
+-- Name: ucstodas gid; Type: DEFAULT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".ucstodas ALTER COLUMN gid SET DEFAULT nextval('"br.domicilios.mma".ucstodas_gid_seq'::regclass);
+
+
+--
+-- Name: ucstodas_final gid; Type: DEFAULT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".ucstodas_final ALTER COLUMN gid SET DEFAULT nextval('"br.domicilios.mma".ucstodas_final_gid_seq'::regclass);
+
+
+--
+-- Name: censo2010municipios1 censo2010municipios1_pkey; Type: CONSTRAINT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".censo2010municipios1
+    ADD CONSTRAINT censo2010municipios1_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: censo2010municipios censo2010municipios_pkey; Type: CONSTRAINT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".censo2010municipios
+    ADD CONSTRAINT censo2010municipios_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: municipios_grande_populacao chave_primaria_municipios_grande_populacao; Type: CONSTRAINT; Schema: br.domicilios.mma; Owner: postgres
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".municipios_grande_populacao
+    ADD CONSTRAINT chave_primaria_municipios_grande_populacao PRIMARY KEY (codigo);
+
+
+--
+-- Name: habitantes_municipios_geografico habitantes_municipios_geografico_pkey; Type: CONSTRAINT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".habitantes_municipios_geografico
+    ADD CONSTRAINT habitantes_municipios_geografico_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: municipios_pequenos_parsec municipios_pequenos_parsec_pkey; Type: CONSTRAINT; Schema: br.domicilios.mma; Owner: postgres
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".municipios_pequenos_parsec
+    ADD CONSTRAINT municipios_pequenos_parsec_pkey PRIMARY KEY (codigo);
+
+
+--
+-- Name: municipios_perfil_parsec municipios_perfil_parsec_pkey; Type: CONSTRAINT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".municipios_perfil_parsec
+    ADD CONSTRAINT municipios_perfil_parsec_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: ucstodas_final ucstodas_final_pkey; Type: CONSTRAINT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".ucstodas_final
+    ADD CONSTRAINT ucstodas_final_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: ucstodas ucstodas_pkey; Type: CONSTRAINT; Schema: br.domicilios.mma; Owner: administrador-banco
+--
+
+ALTER TABLE ONLY "br.domicilios.mma".ucstodas
+    ADD CONSTRAINT ucstodas_pkey PRIMARY KEY (gid);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
